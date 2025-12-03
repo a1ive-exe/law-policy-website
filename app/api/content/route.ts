@@ -13,6 +13,10 @@ import { slugify } from "@/lib/slug";
 import type { ContentItem } from "@/types";
 import { randomUUID } from "crypto";
 
+// Disable caching for this route to ensure fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // Map ContentType -> /general route segment
 const typeToGeneral = (t?: string) =>
   t?.toLowerCase() === "article"
@@ -27,19 +31,40 @@ const typeToGeneral = (t?: string) =>
 export async function GET() {
   try {
     const client = getSupabaseClient();
-    if (client) {
-      const { data, error } = await client
-        .from("content")
-        .select("*")
-        .order("published_date", { ascending: false });
-
-      if (!error && data) {
-        return NextResponse.json(data.map(rowToContentItem));
-      }
+    if (!client) {
+      console.warn('[API] No Supabase client available');
+      return NextResponse.json([]);
     }
-    // Fallback (if no Supabase client configured)
-    return NextResponse.json([]);
-  } catch {
+
+    const { data, error } = await client
+      .from("content")
+      .select("*")
+      .order("published_date", { ascending: false });
+
+    if (error) {
+      console.error('[API] Error fetching content:', error);
+      // Return empty array instead of failing
+      return NextResponse.json([]);
+    }
+
+    if (data) {
+      const contentItems = data.map(rowToContentItem);
+      return NextResponse.json(contentItems, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      });
+    }
+
+    return NextResponse.json([], {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      },
+    });
+  } catch (error) {
+    console.error('[API] Unexpected error:', error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

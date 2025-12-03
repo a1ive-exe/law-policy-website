@@ -13,6 +13,21 @@ export default async function Home() {
   const featured = getFeaturedContent(content);
   const latest = getLatestContent(content, 6);
 
+  // Calculate stats dynamically
+  const lawAreaSet = new Set<string>();
+  const jurisdictionSet = new Set<string>();
+  const contentTypeSet = new Set<string>();
+  
+  content.forEach(c => {
+    if (c.lawArea) lawAreaSet.add(c.lawArea);
+    if (c.jurisdiction) jurisdictionSet.add(c.jurisdiction);
+    if (c.contentType) contentTypeSet.add(c.contentType);
+  });
+  
+  const uniqueLawAreas = lawAreaSet.size;
+  const uniqueJurisdictions = jurisdictionSet.size;
+  const uniqueContentTypes = contentTypeSet.size;
+
   return (
     <div className="bg-gradient-to-b from-slate-50 to-white">
       {/* Hero Section */}
@@ -55,15 +70,15 @@ export default async function Home() {
             <div className="text-sm text-slate-600 font-medium">Total Publications</div>
           </div>
           <div className="text-center p-6 rounded-xl bg-white border border-slate-200 shadow-sm">
-            <div className="text-3xl font-bold text-slate-900 mb-2">5</div>
+            <div className="text-3xl font-bold text-slate-900 mb-2">{uniqueLawAreas}</div>
             <div className="text-sm text-slate-600 font-medium">Law Areas</div>
           </div>
           <div className="text-center p-6 rounded-xl bg-white border border-slate-200 shadow-sm">
-            <div className="text-3xl font-bold text-slate-900 mb-2">2</div>
+            <div className="text-3xl font-bold text-slate-900 mb-2">{uniqueJurisdictions}</div>
             <div className="text-sm text-slate-600 font-medium">Jurisdictions</div>
           </div>
           <div className="text-center p-6 rounded-xl bg-white border border-slate-200 shadow-sm">
-            <div className="text-3xl font-bold text-slate-900 mb-2">3</div>
+            <div className="text-3xl font-bold text-slate-900 mb-2">{uniqueContentTypes}</div>
             <div className="text-sm text-slate-600 font-medium">Content Types</div>
           </div>
         </div>

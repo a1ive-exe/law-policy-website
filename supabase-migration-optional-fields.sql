@@ -19,3 +19,4 @@ ALTER TABLE content ALTER COLUMN excerpt DROP NOT NULL;
 -- Note: slug must remain NOT NULL as it's used for routing
 -- We auto-generate slugs if not provided, so this is safe
 
+

@@ -150,3 +150,4 @@ Run this in your Supabase SQL Editor to update existing tables.
 
 **All changes are backward compatible** - existing content will continue to work!
 
+

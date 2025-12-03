@@ -31,14 +31,35 @@ export default function AdminDashboard() {
     fetchContent();
   }, []);
 
+  // Refresh content when window gains focus (helps catch updates)
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchContent();
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, []);
+
   const fetchContent = async () => {
     try {
-      const response = await fetch('/api/content');
+      // Add cache-busting query parameter to ensure fresh data
+      const response = await fetch(`/api/content?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
+      
       if (response.ok) {
         const data = await response.json();
-        setContent(data);
+        setContent(data || []);
       } else if (response.status === 401) {
         router.push('/admin/login');
+      } else {
+        console.error('Failed to fetch content:', response.status, response.statusText);
+        // Try to get error message
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Error details:', errorData);
       }
     } catch (error) {
       console.error('Error fetching content:', error);
@@ -59,8 +80,11 @@ export default function AdminDashboard() {
 
       if (response.ok) {
         setContent(content.filter(item => item.id !== id));
+        // Refresh the content list to ensure consistency
+        fetchContent();
       } else {
-        alert('Failed to delete content');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        alert(`Failed to delete content: ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error deleting content:', error);
@@ -106,27 +130,37 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="bg-white border-b border-slate-200 shadow-sm">
         <div className="mx-auto max-w-7xl px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-serif font-bold text-slate-900">Admin Dashboard</h1>
-              <p className="text-sm text-slate-600 mt-1">Manage your content</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-serif font-bold text-slate-900">Admin Dashboard</h1>
+                <p className="text-sm text-slate-600 mt-1">Manage your content ({content.length} items)</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => {
+                    setLoading(true);
+                    fetchContent();
+                  }}
+                  className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
+                  title="Refresh content list"
+                >
+                  Refresh
+                </button>
+                <Link
+                  href="/"
+                  className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  View Site
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all text-sm font-medium"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                View Site
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all text-sm font-medium"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
-            </div>
-          </div>
         </div>
       </div>
 
