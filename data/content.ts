@@ -52,7 +52,7 @@ We propose a nuanced approach that:
 The future of trademark exhaustion requires a careful rebalancing of competing interests in the digital age.`,
     excerpt: 'An in-depth examination of how trademark exhaustion principles apply in digital markets, with recommendations for policy reform.',
     tags: ['Trademark', 'Exhaustion', 'IP Law', 'Digital Markets'],
-    featured: true,
+    featured: false,
     categoryPath: 'IP Law → Domestic → Article'
   },
   {
@@ -84,7 +84,7 @@ Our research reveals three critical areas of concern:
 We propose a framework for balancing data sovereignty with economic efficiency.`,
     excerpt: 'A comprehensive analysis of data localization policies and their implications for international digital commerce.',
     tags: ['Data Protection', 'TMT', 'International Law', 'Privacy'],
-    featured: true,
+    featured: false,
     categoryPath: 'TMT → International → Paper'
   },
   {
@@ -136,7 +136,7 @@ Phase 4 (Months 19-24): Full rollout
 These reforms will create a more efficient, accessible, and equitable labour dispute resolution system.`,
     excerpt: 'A comprehensive policy proposal for reforming India\'s labour dispute resolution mechanisms to improve efficiency and access to justice.',
     tags: ['Labour Law', 'Policy Reform', 'Dispute Resolution', 'India'],
-    featured: true,
+    featured: false,
     categoryPath: 'Policy Recommendations → Domestic'
   },
   {
