@@ -1,5 +1,4 @@
 import { ContentItem } from '@/types';
-import { sampleContent as defaultContent } from './content';
 import { getSupabaseClient, rowToContentItem } from '@/lib/supabase';
 
 // Helper to extract error information from Supabase errors
@@ -12,7 +11,7 @@ function extractErrorInfo(error: any): Record<string, any> {
   };
 }
 
-// Try to load from Supabase, fallback to default content
+// Load content from Supabase only (no demo content)
 export async function loadContent(): Promise<ContentItem[]> {
   // Check if we're in a server environment and have Supabase configured
   if (typeof window === 'undefined') {
@@ -21,14 +20,14 @@ export async function loadContent(): Promise<ContentItem[]> {
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
-      // Supabase not configured - silently use default content
-      return defaultContent;
+      // Supabase not configured - return empty array (no demo content)
+      return [];
     }
 
     const client = getSupabaseClient();
     if (!client) {
-      // Client creation failed - silently use default content
-      return defaultContent;
+      // Client creation failed - return empty array (no demo content)
+      return [];
     }
 
     try {
@@ -42,15 +41,18 @@ export async function loadContent(): Promise<ContentItem[]> {
         // Use console.warn instead of console.error to avoid Next.js overlay noise
         if (process.env.NODE_ENV === 'development') {
           const errorDetails = extractErrorInfo(error);
-          console.warn('[Supabase] Error loading content, using fallback:', errorDetails);
+          console.warn('[Supabase] Error loading content:', errorDetails);
         }
-        // Silently fall back to default content
-        return defaultContent;
+        // Return empty array on error (no demo content)
+        return [];
       }
 
       if (data && data.length > 0) {
         return data.map(rowToContentItem);
       }
+      
+      // If Supabase is empty, return empty array (no demo content)
+      return [];
     } catch (error) {
       // Catch any unexpected errors (network, parsing, etc.)
       // Only log in development to avoid production noise
@@ -60,15 +62,15 @@ export async function loadContent(): Promise<ContentItem[]> {
           : { error: String(error) };
         console.warn('[Supabase] Unexpected error, using fallback:', errorInfo);
       }
-      return defaultContent;
+      return [];
     }
   }
 
-  // Fallback to default content
-  return defaultContent;
+  // Fallback to empty array (no demo content)
+  return [];
 }
 
-// For client-side usage (synchronous, returns default content)
+// For client-side usage (synchronous, returns empty array)
 export function loadContentSync(): ContentItem[] {
-  return defaultContent;
+  return [];
 }

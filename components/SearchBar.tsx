@@ -22,10 +22,8 @@ export default function SearchBar() {
         }
       })
       .catch(() => {
-        // Fallback to default content if API fails
-        import('@/data/content').then(({ sampleContent }) => {
-          setAllContent(sampleContent);
-        });
+        // API failed - set empty array (no demo content)
+        setAllContent([]);
       });
   }, []);
 
