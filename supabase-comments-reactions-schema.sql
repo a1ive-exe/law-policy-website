@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS reactions (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
   content_id TEXT NOT NULL REFERENCES content(id) ON DELETE CASCADE,
   reaction_type TEXT NOT NULL CHECK (reaction_type IN ('like', 'heart', 'insightful')),
-  user_ip TEXT, -- Store IP to prevent duplicate reactions (optional)
+  user_ip TEXT NOT NULL, -- Store IP/identifier to prevent duplicate reactions
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(content_id, user_ip, reaction_type) -- Prevent duplicate reactions from same IP
+  UNIQUE(content_id, user_ip, reaction_type) -- Prevent duplicate reactions from same IP/identifier
 );
 
 -- Create index on content_id for faster lookups

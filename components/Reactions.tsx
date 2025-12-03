@@ -88,7 +88,12 @@ export default function Reactions({ contentId }: ReactionsProps) {
         alert('You have already reacted to this content');
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to add reaction');
+        const errorMsg = error.hint 
+          ? `${error.error}\n\n${error.hint}` 
+          : error.details 
+          ? `${error.error}\n\nDetails: ${error.details}` 
+          : error.error || 'Failed to add reaction';
+        alert(errorMsg);
       }
     } catch (error) {
       console.error('Error adding reaction:', error);

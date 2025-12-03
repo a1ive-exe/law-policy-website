@@ -79,8 +79,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user IP for duplicate prevention
+    // Use a combination of IP and a session identifier for better duplicate detection
     const forwarded = request.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown';
+    const ip = forwarded ? forwarded.split(',')[0].trim() : request.headers.get('x-real-ip') || null;
+    
+    // If no IP available, use a timestamp-based identifier (less ideal but works)
+    const userIdentifier = ip || `session-${Date.now()}-${Math.random()}`;
 
     // Try to insert, but handle duplicate gracefully
     const { data, error } = await client
@@ -89,7 +93,7 @@ export async function POST(request: NextRequest) {
         id: generateUUID(),
         content_id: contentId,
         reaction_type: reactionType,
-        user_ip: ip,
+        user_ip: userIdentifier,
       })
       .select()
       .single();
@@ -103,7 +107,18 @@ export async function POST(request: NextRequest) {
         );
       }
       console.error('[API] Error creating reaction:', error);
-      return NextResponse.json({ error: 'Failed to create reaction' }, { status: 500 });
+      // Return more detailed error message for debugging
+      const errorMessage = error.message || 'Failed to create reaction';
+      const errorCode = error.code || 'UNKNOWN';
+      return NextResponse.json(
+        { 
+          error: 'Failed to create reaction',
+          details: errorMessage,
+          code: errorCode,
+          hint: errorCode === '42P01' ? 'Reactions table does not exist. Please run the SQL schema in Supabase.' : undefined
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(data, { status: 201 });

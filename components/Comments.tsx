@@ -84,7 +84,12 @@ export default function Comments({ contentId }: CommentsProps) {
         setComment('');
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to post comment');
+        const errorMsg = error.hint 
+          ? `${error.error}\n\n${error.hint}` 
+          : error.details 
+          ? `${error.error}\n\nDetails: ${error.details}` 
+          : error.error || 'Failed to post comment';
+        alert(errorMsg);
       }
     } catch (error) {
       console.error('Error posting comment:', error);

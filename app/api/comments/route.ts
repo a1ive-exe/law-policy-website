@@ -74,7 +74,18 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('[API] Error creating comment:', error);
-      return NextResponse.json({ error: 'Failed to create comment' }, { status: 500 });
+      // Return more detailed error message for debugging
+      const errorMessage = error.message || 'Failed to create comment';
+      const errorCode = error.code || 'UNKNOWN';
+      return NextResponse.json(
+        { 
+          error: 'Failed to create comment',
+          details: errorMessage,
+          code: errorCode,
+          hint: errorCode === '42P01' ? 'Comments table does not exist. Please run the SQL schema in Supabase.' : undefined
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(data, { status: 201 });
