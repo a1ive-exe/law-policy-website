@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { MessageSquare, Send, User } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MessageSquare, Send, User, Trash2 } from 'lucide-react';
+import { isAuthenticated as checkAuth } from '@/lib/admin-auth-client';
 
 interface Comment {
   id: string;
-  authorName: string;
+  author_name: string;
+  author_email: string;
   comment: string;
-  date: string;
+  created_at: string;
 }
 
 interface CommentsProps {
@@ -19,22 +21,99 @@ export default function Comments({ contentId }: CommentsProps) {
   const [authorName, setAuthorName] = useState('');
   const [authorEmail, setAuthorEmail] = useState('');
   const [comment, setComment] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    // Check if user is admin
+    checkAdminStatus();
+    fetchComments();
+  }, [contentId]);
+
+  const checkAdminStatus = async () => {
+    try {
+      const authenticated = await checkAuth();
+      setIsAdmin(authenticated);
+    } catch (error) {
+      setIsAdmin(false);
+    }
+  };
+
+  const fetchComments = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/comments?contentId=${contentId}`, {
+        cache: 'no-store',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setComments(data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!authorName || !authorEmail || !comment) return;
 
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      authorName,
-      comment,
-      date: new Date().toISOString()
-    };
+    try {
+      setSubmitting(true);
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contentId,
+          authorName: authorName.trim(),
+          authorEmail: authorEmail.trim(),
+          comment: comment.trim(),
+        }),
+      });
 
-    setComments([...comments, newComment]);
-    setAuthorName('');
-    setAuthorEmail('');
-    setComment('');
+      if (response.ok) {
+        const newComment = await response.json();
+        setComments([newComment, ...comments]);
+        setAuthorName('');
+        setAuthorEmail('');
+        setComment('');
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to post comment');
+      }
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      alert('Failed to post comment. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (commentId: string) => {
+    if (!confirm('Are you sure you want to delete this comment?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/comments?id=${commentId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setComments(comments.filter(c => c.id !== commentId));
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to delete comment');
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      alert('Failed to delete comment. Please try again.');
+    }
   };
 
   return (
@@ -42,23 +121,32 @@ export default function Comments({ contentId }: CommentsProps) {
       <div className="flex items-center gap-2 mb-6">
         <MessageSquare className="w-5 h-5 text-slate-700" />
         <h3 className="text-2xl font-serif font-bold text-slate-900">Comments</h3>
-        {comments.length > 0 && (
-          <span className="text-sm text-slate-500">({comments.length})</span>
-        )}
+        <span className="text-sm text-slate-500">({comments.length})</span>
       </div>
       
-      {comments.length > 0 && (
+      {loading ? (
+        <div className="text-center py-8 text-slate-500">Loading comments...</div>
+      ) : comments.length > 0 ? (
         <div className="mb-8 space-y-6">
           {comments.map((comment) => (
-            <div key={comment.id} className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+            <div key={comment.id} className="bg-slate-50 rounded-xl p-6 border border-slate-200 relative">
+              {isAdmin && (
+                <button
+                  onClick={() => handleDelete(comment.id)}
+                  className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
+                  title="Delete comment"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
                   <User className="w-5 h-5 text-slate-600" />
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">{comment.authorName}</div>
+                  <div className="font-semibold text-slate-900">{comment.author_name}</div>
                   <div className="text-xs text-slate-500">
-                    {new Date(comment.date).toLocaleDateString('en-US', { 
+                    {new Date(comment.created_at).toLocaleDateString('en-US', { 
                       year: 'numeric', 
                       month: 'long', 
                       day: 'numeric',
@@ -71,6 +159,10 @@ export default function Comments({ contentId }: CommentsProps) {
               <p className="text-slate-700 leading-relaxed">{comment.comment}</p>
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="mb-8 text-center py-8 text-slate-500">
+          No comments yet. Be the first to comment!
         </div>
       )}
 
@@ -88,6 +180,7 @@ export default function Comments({ contentId }: CommentsProps) {
               onChange={(e) => setAuthorName(e.target.value)}
               className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-300/50 transition-all"
               required
+              disabled={submitting}
             />
           </div>
           <div>
@@ -101,6 +194,7 @@ export default function Comments({ contentId }: CommentsProps) {
               onChange={(e) => setAuthorEmail(e.target.value)}
               className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-300/50 transition-all"
               required
+              disabled={submitting}
             />
           </div>
         </div>
@@ -115,14 +209,16 @@ export default function Comments({ contentId }: CommentsProps) {
             rows={4}
             className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-300/50 transition-all resize-none"
             required
+            disabled={submitting}
           />
         </div>
         <button
           type="submit"
-          className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl"
+          disabled={submitting}
+          className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Send className="w-4 h-4" />
-          Post Comment
+          {submitting ? 'Posting...' : 'Post Comment'}
         </button>
       </form>
     </div>
