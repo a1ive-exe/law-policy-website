@@ -1,0 +1,123 @@
+[
+  {
+    "id": "2",
+    "title": "Data Localization and Cross-Border Data Flows",
+    "slug": "data-localization-cross-border-flows",
+    "author": {
+      "id": "main",
+      "name": "Devesh Mandhata",
+      "credentials": [
+        "LL.M. (Harvard)",
+        "Research Fellow"
+      ],
+      "linkedin": "https://linkedin.com/in/deveshmandhata",
+      "email": "contact@deveshmandhata.com",
+      "otherLinks": []
+    },
+    "publishedDate": "2025-01-10",
+    "lawArea": "TMT",
+    "jurisdiction": "International",
+    "contentType": "Paper",
+    "content": "# Data Localization and Cross-Border Data Flows\n\nThis paper examines the legal and policy implications of data localization requirements and their impact on international trade and digital innovation.\n\n## Introduction\n\nData localization mandates have become increasingly common as nations seek to protect citizen data and maintain regulatory oversight. However, these requirements can create significant barriers to international trade and digital commerce.\n\n## Key Findings\n\nOur research reveals three critical areas of concern:\n1. Economic impact on digital services\n2. Privacy and security trade-offs\n3. Regulatory fragmentation\n\n## Recommendations\n\nWe propose a framework for balancing data sovereignty with economic efficiency.",
+    "excerpt": "A comprehensive analysis of data localization policies and their implications for international digital commerce.",
+    "tags": [
+      "Data Protection",
+      "TMT",
+      "International Law",
+      "Privacy"
+    ],
+    "featured": true,
+    "categoryPath": "TMT → International → Paper"
+  },
+  {
+    "id": "3",
+    "title": "Reforming Labour Dispute Resolution Mechanisms",
+    "slug": "reforming-labour-dispute-resolution",
+    "author": {
+      "id": "main",
+      "name": "Devesh Mandhata",
+      "credentials": [
+        "LL.M. (Harvard)",
+        "Research Fellow"
+      ],
+      "linkedin": "https://linkedin.com/in/deveshmandhata",
+      "email": "contact@deveshmandhata.com",
+      "otherLinks": []
+    },
+    "publishedDate": "2025-01-05",
+    "lawArea": "Labour Law",
+    "jurisdiction": "Domestic",
+    "isPolicyRecommendation": true,
+    "policyTheme": "Labour",
+    "content": "# Reforming Labour Dispute Resolution Mechanisms\n\n## Executive Summary\n\nIndia's labour dispute resolution system requires comprehensive reform to address delays, improve access to justice, and align with international best practices.\n\n## Current Challenges\n\n1. Prolonged litigation timelines\n2. Limited access for informal workers\n3. Inadequate mediation infrastructure\n4. Fragmented regulatory framework\n\n## Proposed Reforms\n\n### 1. Digital Dispute Resolution Platform\nEstablish a centralized digital platform for filing and tracking disputes, reducing paperwork and improving transparency.\n\n### 2. Mandatory Pre-litigation Mediation\nRequire parties to attempt mediation before proceeding to formal adjudication, reducing court backlog.\n\n### 3. Specialized Fast-Track Courts\nCreate specialized labour courts with dedicated timelines for resolution.\n\n### 4. Enhanced Worker Protections\nExpand protections for gig economy and contract workers.\n\n## Implementation Timeline\n\nPhase 1 (Months 1-6): Digital platform development\nPhase 2 (Months 7-12): Pilot mediation programs\nPhase 3 (Months 13-18): Court restructuring\nPhase 4 (Months 19-24): Full rollout\n\n## Conclusion\n\nThese reforms will create a more efficient, accessible, and equitable labour dispute resolution system.",
+    "excerpt": "A comprehensive policy proposal for reforming India's labour dispute resolution mechanisms to improve efficiency and access to justice.",
+    "tags": [
+      "Labour Law",
+      "Policy Reform",
+      "Dispute Resolution",
+      "India"
+    ],
+    "featured": true,
+    "categoryPath": "Policy Recommendations → Domestic"
+  },
+  {
+    "id": "4",
+    "title": "M&A Trends in the Technology Sector",
+    "slug": "m-a-trends-technology-sector",
+    "author": {
+      "id": "main",
+      "name": "Devesh Mandhata",
+      "credentials": [
+        "LL.M. (Harvard)",
+        "Research Fellow"
+      ],
+      "linkedin": "https://linkedin.com/in/deveshmandhata",
+      "email": "contact@deveshmandhata.com",
+      "otherLinks": []
+    },
+    "publishedDate": "2024-12-28",
+    "lawArea": "M&A",
+    "jurisdiction": "Both",
+    "contentType": "Blog",
+    "content": "# M&A Trends in the Technology Sector\n\nThe technology sector has seen unprecedented M&A activity in recent years, driven by digital transformation, competitive consolidation, and strategic positioning.\n\n## Key Trends\n\n1. **Mega-Deals**: Billion-dollar acquisitions continue to shape the landscape\n2. **Cross-Border Activity**: International deals are increasingly common\n3. **Regulatory Scrutiny**: Antitrust concerns are reshaping deal structures\n4. **Strategic Acquisitions**: Companies prioritize technology and talent acquisition\n\n## Regulatory Landscape\n\nBoth domestic and international regulators are taking a closer look at technology M&A, particularly in areas affecting competition and data protection.\n\n## Looking Ahead\n\nThe coming year promises continued activity, with a focus on AI, cybersecurity, and platform consolidation.",
+    "excerpt": "An analysis of recent M&A trends in the technology sector and their legal implications.",
+    "tags": [
+      "M&A",
+      "Technology",
+      "Corporate Law",
+      "Antitrust"
+    ],
+    "featured": false,
+    "categoryPath": "M&A → Both → Blog"
+  },
+  {
+    "id": "5",
+    "title": "Climate Change Litigation: Emerging Trends",
+    "slug": "climate-change-litigation-trends",
+    "author": {
+      "id": "main",
+      "name": "Devesh Mandhata",
+      "credentials": [
+        "LL.M. (Harvard)",
+        "Research Fellow"
+      ],
+      "linkedin": "https://linkedin.com/in/deveshmandhata",
+      "email": "contact@deveshmandhata.com",
+      "otherLinks": []
+    },
+    "publishedDate": "2024-12-20",
+    "lawArea": "Environmental Law",
+    "jurisdiction": "International",
+    "contentType": "Article",
+    "content": "# Climate Change Litigation: Emerging Trends\n\nClimate change litigation has emerged as a powerful tool for environmental protection and corporate accountability.\n\n## Global Trends\n\nCourts worldwide are increasingly recognizing climate-related claims, from individual rights to corporate liability.\n\n## Key Cases\n\nSeveral landmark cases have shaped the landscape, including youth-led constitutional claims and shareholder derivative suits.\n\n## Future Directions\n\nThe field is evolving rapidly, with new legal theories and regulatory frameworks emerging.",
+    "excerpt": "An exploration of emerging trends in climate change litigation and their implications for environmental law.",
+    "tags": [
+      "Environmental Law",
+      "Climate Change",
+      "Litigation",
+      "International Law"
+    ],
+    "featured": false,
+    "categoryPath": "Environmental Law → International → Article"
+  }
+]
